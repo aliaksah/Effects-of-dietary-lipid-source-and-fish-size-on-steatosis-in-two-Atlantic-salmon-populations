@@ -8,8 +8,8 @@ library(gridExtra)
 ############################################
 ### Import data from excel
 ###
-tbl_data <- read_xlsx(path = "Fish and fatty acid results for database.xlsx",
-                      sheet = 3)[1:48,]
+tbl_data <- read_xlsx(path = "Fish and fatty acid results for database Final.xlsx",
+                      sheet = 4)[1:48,]
 
 colnames(tbl_data)
 colnames(tbl_data)
@@ -20,12 +20,13 @@ targets = colnames(tbl_data)[4:19]
 
 tbl_data$OID = as.integer(as.factor(tbl_data$Organ)) - 1
 tbl_data$OID[tbl_data$Organ=="Feed"] = 1
-tbl_data$OID[tbl_data$Organ== "Pyloric intestine"] = 2
-tbl_data$OID[tbl_data$Organ=="Liver"] = 3
-tbl_data$OID[tbl_data$Organ=="Mesenteric tissue"] = 4
+tbl_data$OID[tbl_data$Organ=="PI"] = 2
+tbl_data$OID[tbl_data$Organ=="LI"] = 3
+tbl_data$OID[tbl_data$Organ=="Mes"] = 4
 tbl_data$SID = 2 - as.integer(as.factor(tbl_data$Fish)) 
 tbl_data$LID = as.integer(tbl_data$Organ=="Liver")
 tbl_data$LOID = (tbl_data$LID)*(tbl_data$SID+1)
+
 fml = NULL
 
 
@@ -55,7 +56,7 @@ for (index in 1:length(targets)){
     org = unique(tbl_data$Organ)[orgid]
     
     pcprior = list(prec = list(prior = "pc.prec", param=c(1,0.1)))
-   
+    
     
     idx = 1:dim(tbl_data)[1]
     
@@ -110,7 +111,7 @@ for (index in 1:length(targets)){
     resaccid = rbind(resaccid,res)
     
     
-  
+    
     plot2 = data.residuals %>% 
       mutate(Fitted = data.residuals$preds,
              Residuals = data.residuals$resids, Organ = data.residuals$organ) %>% 
@@ -158,7 +159,7 @@ ress = as.data.frame(do.call(rbind, lapply(X = 1:length(reslist),function(i){
   bf10 = probs[1]/probs[2]
   reslist[[i]]$best$summary.fixed
   
-  saveRDS(file = paste0("models_acid_altu1/",targets[i],"_acid_best.RDS"),object = (reslist[[i]]$best$summary.fixed))
+  #saveRDS(file = paste0("models_acid_altu1/",targets[i],"_acid_best.RDS"),object = (reslist[[i]]$best$summary.fixed))
   
   id.best =  which(reslist[[i]]$probs == probs[1])
   
@@ -177,8 +178,6 @@ ress = as.data.frame(do.call(rbind, lapply(X = 1:length(reslist),function(i){
   }
   c(paste0("m",id.best),round(c(probs[1],bf10,effects,reslist[[i]]$res$rvalue[1]),3))
 })))
-
-ress1 = read.csv("models_acid_altu1/final_table.csv")
 
 
 
