@@ -159,7 +159,7 @@ ress = as.data.frame(do.call(rbind, lapply(X = 1:length(reslist),function(i){
   bf10 = probs[1]/probs[2]
   reslist[[i]]$best$summary.fixed
   
-  #saveRDS(file = paste0("models_acid_altu1/",targets[i],"_acid_best.RDS"),object = (reslist[[i]]$best$summary.fixed))
+  saveRDS(file = paste0("models_acid_altu1/",targets[i],"_acid_best.RDS"),object = (reslist[[i]]$best$summary.fixed))
   
   id.best =  which(reslist[[i]]$probs == probs[1])
   
